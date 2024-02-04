@@ -4,12 +4,18 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp( MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatefulWidget {
+   MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+double x=0;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,17 +24,23 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home:  Scaffold(
-        //appBar: AppBar(),
-        body:  Container(
+        appBar: AppBar(),
+       body: Container(
           width: double.infinity,
           height: double.infinity,
-          color: Colors.amber,
+          color: Colors.grey,
 
           child: CustomPaint(
-            painter: _MyPainter(),
+            painter: _MyPainter(porcentaje: x),
           ),
+
         ),
-      ),
+        floatingActionButton: FloatingActionButton(onPressed: null)
+        ),
+       
+        
+        //floatingActionButton: FloatingActionButton(onPressed: (){})),
+      
     );
   }
 }
@@ -36,6 +48,10 @@ class MyApp extends StatelessWidget {
 
 
 class _MyPainter extends CustomPainter {
+  final double porcentaje;
+
+  _MyPainter({ required this.porcentaje});
+
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -52,15 +68,21 @@ Rect rect = Rect.fromCenter(center: Offset(size.width*.36, size.height*.54),widt
     paint.shader=gradient.createShader(rect);
     paint.color=Colors.blue;
     paint.strokeWidth=20;
-    paint.style=PaintingStyle.stroke;// punta
+    //paint.style=PaintingStyle.stroke;// punta
     paint.style=PaintingStyle.fill;//rellena
 
 
     final paint1 = Paint();//lapiz
-    paint1.color=Colors.blue;
-    paint1.strokeWidth=20;
+    paint1.color=Colors.pink;
+    paint1.strokeWidth=5;
     paint1.style=PaintingStyle.stroke;// punta
-    paint1.style=PaintingStyle.fill;//rellena
+    //paint1.style=PaintingStyle.fill;//rellena
+
+    final paint2 = Paint();//lapiz
+    paint2.color=Colors.indigo;
+    paint2.strokeWidth=3;
+    paint2.style=PaintingStyle.stroke;// punta
+    //paint1.style=PaintingStyle.fill;//rellen
 
 final Path path = Path(); //ruta del lapiz
 path.lineTo(size.width, 100.0);
@@ -77,12 +99,23 @@ path.arcTo(rect2, 0, pi*1.99, true);
 
 Rect rect3 = Rect.fromCenter(center: Offset(size.width*.09, size.height*.85),width: 30,height: 30) ;
 path.arcTo(rect3, 0, pi*1.99, true);
+
 canvas.drawPath(path,paint1);
 
 Rect rect4 = Rect.fromCenter(center: Offset(size.width*.05, size.height*.95),width: 15,height: 15) ;
 path.arcTo(rect4, 0, pi*1.99, true);
 
 canvas.drawPath(path,paint);
+
+canvas.drawCircle//mas facil que el anterion..
+(Offset(size.width*.70, size.height*.7), 
+min(size.width*.2, size.height*.2),
+ paint2);
+
+
+Rect rectArco = Rect.fromCircle(center: Offset(size.width*.70, size.height*.7), radius: min(size.width*.2, size.height*.2));
+
+canvas.drawArc(rectArco, -pi/2, 2*pi*0.7, false, paint1);
 
   }
 
