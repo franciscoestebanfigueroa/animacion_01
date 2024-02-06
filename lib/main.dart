@@ -59,21 +59,56 @@ class MyProgres extends StatefulWidget {
   State<MyProgres> createState() => _MyProgresState();
 }
 
-class _MyProgresState extends State<MyProgres> {
+class _MyProgresState extends State<MyProgres> with SingleTickerProviderStateMixin{
+  
+  late AnimationController controller;
+  
+  @override
+  void initState() {
+    
+    controller= AnimationController(vsync: this,duration:const  Duration(milliseconds: 400));
+    controller.addListener(() { 
+    
+      
+    
+      print("controler${controller.value}");
+    });
+    
+    super.initState();
+  }
+
+@override
+  void dispose() {
+    controller.dispose();
+    
+    super.dispose();
+  }
+  
+  
+  
+  
+  
   @override
   Widget build(BuildContext context) {
+    controller.forward(from: 0.0);
     return Center(
-      child:Container(
-
-          width: 200,
-          height: 200,
-          child: CustomPaint(
-            child: Center(child: Text("${widget.porcentaje}",style: TextStyle(fontSize: 20))),
-           
-            painter: _ProgresPainter(porcentaje:widget.porcentaje),),
-       
-       
-        ),
+       child: AnimatedBuilder(
+        animation: controller,
+        builder: (context, child) {
+          return Container(
+      
+            width: 200,
+            height: 200,
+            child: CustomPaint(
+              child: Center(child: Text("${((widget.porcentaje)*controller.value).ceil()}",style: TextStyle(fontSize: 20))),
+             
+              painter: _ProgresPainter(porcentaje:(widget.porcentaje)*controller.value),),
+         
+         
+          );
+        },
+       ),
+      
         
     );
   }
